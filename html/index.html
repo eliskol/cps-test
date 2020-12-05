@@ -1,0 +1,116 @@
+<html>
+<!-- In that tutorial, we are going to create a Click Speed Test Game in HTML5 -->
+<head>
+
+    <title>Click Speed Test</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">    
+    <meta name="site_name" content="click speed test">
+    <meta name="author" content="eliskol">
+    <meta name="image" content="/clicking.gif">
+    <meta name="url" content="https://experimenting.eliskol.repl.co/">
+    <meta name="title" content="Click Speed Test">
+    <meta name="description" content="A 10 second click speed test.">
+    <meta name="og:site_name" content="click speed test">
+    <meta name="theme-color" content="#32353b">
+    <meta name="og:image" content="/clicking.gif">
+    <meta name="og:url" content="https://experimenting.eliskol.repl.co/">
+    <meta name="og:title" content="click speed test">
+    <meta name="og:description" content="A 10 second click speed test.">
+    <link rel="icon" type="image/png" sizes="1000x1000" href="/clicking.gif">
+
+
+<script src = "test.js"></script>
+<link rel="stylesheet" href="style.css">
+
+
+</head>
+<body onload="OLF();">
+  <script src = "script.js"></script>
+  <div id="content">
+    Timer: <span id="timer"></span><br/>
+    Score: <span id="score"></span><br/>
+    Clicks/s: <span id="clicks"></span>
+  </div>
+  <div id="clickarea">
+    <button id="start">Start</button>
+  </div>
+  <script type="text/javascript">
+    // we write the logic of our game :)
+    var score; // for storing the current score of the game
+    var duration = 10; // duration of the game (10 seconds here)
+    var startTime; // start time in ms
+    var ended = true; // boolean indicating if game is ended
+    // we get DOM references for the HTML elements
+    var timerTxt = document.getElementById("timer");
+    var scoreTxt = document.getElementById("score");
+    var clicksTxt = document.getElementById("clicks");
+    var startBtn = document.getElementById("start");
+    var clickArea = document.getElementById("clickarea");
+    
+    // we define two utilitary functions for hiding / showing a HTML elt
+    var show = function(elem) {
+      elem.style.display = 'inline';
+    };
+    
+    var hide = function(elem) {
+      elem.style.display = 'none';
+    }
+    
+    // we define the start game function
+    function startGame() {
+      hide(startBtn);
+      score = -1;
+      ended = false;
+      startTime = new Date().getTime();
+      
+      // we create a Timer with the setInterval function
+      var timerId = setInterval(function() {
+        var total = (new Date().getTime() - startTime) / 1000;
+        
+        // while total is lower than duration, we update timer and the clicks/s
+        if (total < duration) {
+          timerTxt.textContent = total.toFixed(3);
+          clicksTxt.textContent = (score / total).toFixed(2);
+        } else {
+          // otherwise, game is ended, we clear the timer and we set game as ended
+          ended = true;
+          clearInterval(timerId);
+          endGame();
+        }
+      }, 1);
+    }
+    
+    function endGame() {
+      // We write final stats (score and clicks/s)
+      var clicksBySec = (score / duration).toFixed(2);
+      timerTxt.textContent = duration.toFixed(3);
+      clicksTxt.textContent = clicksBySec;
+      // we show start button if player wants to retry
+      show(startBtn);
+      
+      // we display an alert to the user in 10 ms for letting the DOM be updated
+      setTimeout(function() {
+        alert('You clicked ' + score + ' clicks in ' + duration + ' seconds. It is ' +
+              clicksBySec + ' clicks per second. Try again!');
+        save();
+      }, 10);
+    }
+    
+    // we set a click event listener on the start button
+    startBtn.addEventListener("click", function() {
+      startGame();
+    });
+    
+    // we add a click event listener on the click area div to update
+    // the score when the user will click on it
+    clickArea.addEventListener("click", function() {
+      if (!ended) {
+        score++;
+        scoreTxt.textContent = score; // we update the score
+      }
+    });
+    
+  </script>
+</body>
+</html>

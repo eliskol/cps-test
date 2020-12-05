@@ -1,0 +1,2 @@
+#CPS Test
+## This is a simple CPS test written in Node.JS. It prompts the user for a name, and then lets them take a CPS length 10 seconds long. The user's result is saved to /html/messages/leaderboard.json.
